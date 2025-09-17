@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        username: ${NACOS_USERNAME:nacos}  # 添加认证用户名
+        password: ${NACOS_PASSWORD:nacos}  # 添加认证密码
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        username: ${NACOS_USERNAME:nacos}  # 添加认证用户名
+        password: ${NACOS_PASSWORD:nacos}  # 添加认证密码
+  redis:
+    host: ${REDIS_HOST:localhost}
+    
+  profiles: docker

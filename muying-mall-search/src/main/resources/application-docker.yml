@@ -1,0 +1,85 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: muying-mall-search
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/muying_mall_search?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  elasticsearch:
+    uris: http://elasticsearch:9200
+    connection-timeout: 1s
+    socket-timeout: 30s
+
+  redis:
+    host: redis
+    port: 6379
+    password: 123456
+    timeout: 10000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+        namespace: dev
+        group: muying-mall
+      config:
+        server-addr: nacos:8848
+        namespace: dev
+        group: muying-mall
+        file-extension: yml
+
+# Feign configuration
+feign:
+  sentinel:
+    enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 10000
+
+# Sentinel configuration
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: sentinel:8080
+        port: 8719
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Logging
+logging:
+  level:
+    com.muyingmall.search: DEBUG
+    org.springframework.cloud: DEBUG
+    org.elasticsearch: DEBUG

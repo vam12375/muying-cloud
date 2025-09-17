@@ -1,0 +1,221 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: muying-mall-gateway
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  config:
+    import: optional:nacos:muying-mall-gateway-dev.yml
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+        group: GATEWAY_GROUP
+        enabled: true  # 服务注册
+        username: nacos  # 添加认证用户名
+        password: nacos  # 添加认证密码
+      config:
+        server-addr: localhost:8848
+        namespace: dev
+        file-extension: yml
+        group: GATEWAY_GROUP
+        enabled: true  # 配置中心
+        username: nacos  # 添加认证用户名
+        password: nacos  # 添加认证密码
+        
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 用户服务路由
+        - id: user-service
+          uri: lb://muying-mall-user
+          predicates:
+            - Path=/api/user/**,/api/session/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+                
+        # 商品服务路由
+        - id: product-service
+          uri: lb://muying-mall-product
+          predicates:
+            - Path=/api/products/**,/api/categories/**,/api/brands/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 订单服务路由
+        - id: order-service
+          uri: lb://muying-mall-order
+          predicates:
+            - Path=/api/orders/**,/api/cart/**,/api/coupons/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 支付服务路由
+        - id: payment-service
+          uri: lb://muying-mall-payment
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 搜索服务路由
+        - id: search-service
+          uri: lb://muying-mall-search
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 物流服务路由
+        - id: logistics-service
+          uri: lb://muying-mall-logistics
+          predicates:
+            - Path=/api/logistics/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 评论服务路由
+        - id: comment-service
+          uri: lb://muying-mall-comment
+          predicates:
+            - Path=/api/comments/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 积分服务路由
+        - id: points-service
+          uri: lb://muying-mall-points
+          predicates:
+            - Path=/api/points/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+
+        # 管理服务路由
+        - id: admin-service
+          uri: lb://muying-mall-admin
+          predicates:
+            - Path=/api/admin/**
+          filters:
+            - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: INTERNAL_SERVER_ERROR
+                methods: GET,POST
+      
+      # 全局过滤器配置
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddResponseHeader=Access-Control-Allow-Origin, *
+        - AddResponseHeader=Access-Control-Allow-Methods, GET,POST,PUT,DELETE,OPTIONS
+        - AddResponseHeader=Access-Control-Allow-Headers, Content-Type,Authorization,X-Requested-With
+        
+    # Sentinel配置
+    sentinel:
+      transport:
+        dashboard: localhost:8858
+        port: 8719
+      filter:
+        enabled: true
+#      datasource:
+#        # 流控规则
+#        ds1:
+#          nacos:
+#            server-addr: localhost:8848
+#            dataId: gateway-flow-rules
+#            groupId: SENTINEL_GROUP
+#            rule-type: flow
+#        # 降级规则
+#        ds2:
+#          nacos:
+#            server-addr: localhost:8848
+#            dataId: gateway-degrade-rules
+#            groupId: SENTINEL_GROUP
+#            rule-type: degrade
+
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# 日志配置
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.alibaba.cloud.sentinel: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%logger{50}] - %msg%n'

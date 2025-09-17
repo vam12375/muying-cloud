@@ -1,0 +1,140 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: muying-mall-user
+  profiles:
+    active: dev
+  config:
+    import: optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+  
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/muying_user_service?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: admin
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      
+  redis:
+    host: localhost
+    port: 6379
+    database: 1
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+    
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+        group: USER_GROUP
+        enabled: true
+        username: nacos
+        password: nacos
+        metadata:
+          version: 1.0.0
+          author: muying-mall
+      config:
+        server-addr: localhost:8848
+        namespace: dev
+        file-extension: yml
+        group: USER_GROUP
+        enabled: true
+        username: nacos
+        password: nacos
+
+    # sentinel:
+    #   transport:
+    #     dashboard: localhost:8858
+    #     port: 8720
+      # datasource:
+      #   ds1:
+      #     nacos:
+      #       server-addr: localhost:8848
+      #       dataId: user-flow-rules
+      #       groupId: SENTINEL_GROUP
+      #       rule-type: flow
+
+# MyBatis Plus配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations: classpath*:mapper/*.xml
+
+# PageHelper配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+# Feign配置
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 10000
+  sentinel:
+    enabled: true
+  httpclient:
+    enabled: true
+    max-connections: 200
+    max-connections-per-route: 50
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# JWT配置
+jwt:
+  secret: ThisIsAReallyLongAndSecureSecretKeyForHS512AlgorithmSoItShouldWorkFineNowPleaseEnsureItIsReallySecureAndRandomEnough
+  expiration: 86400
+
+# 日志配置
+logging:
+  level:
+    com.muyingmall.user: DEBUG
+    com.alibaba.cloud.sentinel: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%logger{50}] - %msg%n'
+    
+# API文档配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

@@ -1,0 +1,325 @@
+version: '3.8'
+
+services:
+  # 基础设施服务
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-server
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: muying_mall
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/conf:/etc/mysql/conf.d
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - muying-mall-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - muying-mall-network
+
+  nacos:
+    image: nacos/nacos-server:v2.4.0
+    container_name: nacos-server
+    environment:
+      MODE: standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root123
+      NACOS_APPLICATION_PORT: 8848
+      JVM_XMS: 512m
+      JVM_XMX: 512m
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      - mysql
+    volumes:
+      - nacos_logs:/home/nacos/logs
+      - nacos_data:/home/nacos/data
+    networks:
+      - muying-mall-network
+
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: sentinel-dashboard
+    ports:
+      - "8858:8858"
+    environment:
+      JAVA_OPTS: "-Xms512m -Xmx512m"
+    networks:
+      - muying-mall-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin-server
+    ports:
+      - "9411:9411"
+    environment:
+      STORAGE_TYPE: mem
+    networks:
+      - muying-mall-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - muying-mall-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - muying-mall-network
+
+  # 微服务
+  gateway:
+    build:
+      context: ./muying-mall-gateway
+      dockerfile: Dockerfile
+    container_name: muying-mall-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - nacos
+      - redis
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  user-service:
+    build:
+      context: ./muying-mall-user
+      dockerfile: Dockerfile
+    container_name: muying-mall-user
+    ports:
+      - "8001:8001"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  product-service:
+    build:
+      context: ./muying-mall-product
+      dockerfile: Dockerfile
+    container_name: muying-mall-product
+    ports:
+      - "8002:8002"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  order-service:
+    build:
+      context: ./muying-mall-order
+      dockerfile: Dockerfile
+    container_name: muying-mall-order
+    ports:
+      - "8003:8003"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+      - product-service
+    networks:
+      - muying-mall-network
+
+  payment-service:
+    build:
+      context: ./muying-mall-payment
+      dockerfile: Dockerfile
+    container_name: muying-mall-payment
+    ports:
+      - "8004:8004"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  search-service:
+    build:
+      context: ./muying-mall-search
+      dockerfile: Dockerfile
+    container_name: muying-mall-search
+    ports:
+      - "8005:8005"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      ELASTICSEARCH_HOST: elasticsearch
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - elasticsearch
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  logistics-service:
+    build:
+      context: ./muying-mall-logistics
+      dockerfile: Dockerfile
+    container_name: muying-mall-logistics
+    ports:
+      - "8006:8006"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  comment-service:
+    build:
+      context: ./muying-mall-comment
+      dockerfile: Dockerfile
+    container_name: muying-mall-comment
+    ports:
+      - "8007:8007"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  points-service:
+    build:
+      context: ./muying-mall-points
+      dockerfile: Dockerfile
+    container_name: muying-mall-points
+    ports:
+      - "8008:8008"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+  admin-service:
+    build:
+      context: ./muying-mall-admin
+      dockerfile: Dockerfile
+    container_name: muying-mall-admin
+    ports:
+      - "8009:8009"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - sentinel-dashboard
+    networks:
+      - muying-mall-network
+
+volumes:
+  mysql_data:
+  redis_data:
+  nacos_logs:
+  nacos_data:
+  elasticsearch_data:
+
+networks:
+  muying-mall-network:
+    driver: bridge
