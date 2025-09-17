@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muyingmall.order.mapper.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.muyingmall.order.entity.Order">
+        <id column="id" property="id" />
+        <result column="order_no" property="orderNo" />
+        <result column="user_id" property="userId" />
+        <result column="payment_method" property="paymentMethod" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="actual_amount" property="actualAmount" />
+        <result column="discount_amount" property="discountAmount" />
+        <result column="shipping_fee" property="shippingFee" />
+        <result column="order_status" property="orderStatus" />
+        <result column="payment_status" property="paymentStatus" />
+        <result column="shipping_status" property="shippingStatus" />
+        <result column="receiver_name" property="receiverName" />
+        <result column="receiver_phone" property="receiverPhone" />
+        <result column="receiver_address" property="receiverAddress" />
+        <result column="remark" property="remark" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, order_no, user_id, payment_method, total_amount, actual_amount, discount_amount,
+        shipping_fee, order_status, payment_status, shipping_status, receiver_name, 
+        receiver_phone, receiver_address, remark, created_time, updated_time, deleted
+    </sql>
+
+    <select id="selectByOrderNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from orders
+        where order_no = #{orderNo,jdbcType=VARCHAR} and deleted = 0
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from orders
+        where user_id = #{userId,jdbcType=BIGINT} and deleted = 0
+        order by created_time desc
+    </select>
+
+    <update id="updateOrderStatus">
+        update orders 
+        set order_status = #{orderStatus,jdbcType=VARCHAR},
+            updated_time = now()
+        where id = #{orderId,jdbcType=BIGINT} and deleted = 0
+    </update>
+
+    <update id="updatePaymentStatus">
+        update orders 
+        set payment_status = #{paymentStatus,jdbcType=VARCHAR},
+            updated_time = now()
+        where id = #{orderId,jdbcType=BIGINT} and deleted = 0
+    </update>
+
+</mapper>

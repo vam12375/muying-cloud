@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muyingmall.order.mapper.CartMapper">
+
+    <resultMap id="BaseResultMap" type="com.muyingmall.order.entity.Cart">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="product_id" property="productId" />
+        <result column="sku_id" property="skuId" />
+        <result column="quantity" property="quantity" />
+        <result column="selected" property="selected" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, product_id, sku_id, quantity, selected, created_time, updated_time, deleted
+    </sql>
+
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cart
+        where user_id = #{userId,jdbcType=BIGINT} and deleted = 0
+        order by created_time desc
+    </select>
+
+    <select id="selectSelectedByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cart
+        where user_id = #{userId,jdbcType=BIGINT} and selected = 1 and deleted = 0
+        order by created_time desc
+    </select>
+
+    <delete id="deleteByUserIdAndProductId">
+        update cart 
+        set deleted = 1, updated_time = now()
+        where user_id = #{userId,jdbcType=BIGINT} 
+        and product_id = #{productId,jdbcType=BIGINT}
+        and sku_id = #{skuId,jdbcType=BIGINT}
+    </delete>
+
+    <update id="updateQuantity">
+        update cart 
+        set quantity = #{quantity,jdbcType=INTEGER},
+            updated_time = now()
+        where user_id = #{userId,jdbcType=BIGINT} 
+        and product_id = #{productId,jdbcType=BIGINT}
+        and sku_id = #{skuId,jdbcType=BIGINT}
+        and deleted = 0
+    </update>
+
+    <update id="updateSelected">
+        update cart 
+        set selected = #{selected,jdbcType=TINYINT},
+            updated_time = now()
+        where user_id = #{userId,jdbcType=BIGINT} 
+        and id = #{cartId,jdbcType=BIGINT}
+        and deleted = 0
+    </update>
+
+</mapper>

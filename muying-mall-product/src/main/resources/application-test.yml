@@ -1,0 +1,46 @@
+# 测试配置，用于本地启动验证
+server:
+  port: 8002
+
+spring:
+  application:
+    name: muying-mall-product
+    
+  # 数据库配置（简化，用于测试）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/muying_product_service?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true
+    username: root
+    password: admin
+    
+  # Redis配置
+  redis:
+    host: localhost
+    port: 6379
+    database: 2
+    timeout: 3000ms
+
+# MyBatis Plus配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+# 日志配置
+logging:
+  level:
+    com.muyingmall.product: DEBUG
+    root: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%logger{50}] - %msg%n'
+
+# 禁用Nacos配置（测试用）
+spring.cloud.nacos.config.enabled: false
+spring.cloud.nacos.discovery.enabled: false
+# 禁用Spring Cloud兼容性检查
+spring.cloud.compatibility-verifier.enabled: false
+# 禁用Sentinel
+spring.cloud.sentinel.enabled: false

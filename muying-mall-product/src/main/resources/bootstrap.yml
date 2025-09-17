@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: muying-mall-product
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: dev
+        group: PRODUCT_GROUP
+      config:
+        namespace: dev
+        group: PRODUCT_GROUP
+        file-extension: yml
+        shared-configs:
+          - data-id: muying-mall-common.yml
+            group: DEFAULT_GROUP
+            refresh: true
