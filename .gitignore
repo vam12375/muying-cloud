@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Temporarily ignore muying-web (embedded git repository)
+muying-web/
+
+# Ignore nul file (Windows reserved name)
+nul
