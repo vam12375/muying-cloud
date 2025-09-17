@@ -1,0 +1,101 @@
+﻿<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: bold 18px sans-serif; text-anchor: middle; }
+      .service { font: 12px sans-serif; text-anchor: middle; fill: white; }
+      .layer-title { font: bold 14px sans-serif; text-anchor: middle; }
+      .arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrowhead); }
+      .connection { stroke: #666; stroke-width: 1; stroke-dasharray: 2,2; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="25" class="title">母婴商城微服务技术架构</text>
+  
+  <!-- Client Layer -->
+  <rect x="50" y="50" width="700" height="60" rx="5" fill="#e1f5fe" stroke="#0277bd" stroke-width="2"/>
+  <text x="400" y="70" class="layer-title">外部系统 & 客户端</text>
+  <text x="150" y="90">👥 用户客户端</text>
+  <text x="300" y="90">📱 移动应用</text>
+  <text x="450" y="90">💻 Web应用</text>
+  <text x="600" y="90">💳 第三方支付</text>
+  
+  <!-- Gateway Layer -->
+  <rect x="300" y="140" width="200" height="40" rx="5" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="400" y="165" class="service">🌐 API Gateway :8080</text>
+  
+  <!-- Microservices Layer -->
+  <rect x="50" y="210" width="700" height="120" rx="5" fill="#e8f5e8" stroke="#388e3c" stroke-width="2"/>
+  <text x="400" y="230" class="layer-title">微服务集群</text>
+  
+  <!-- Core Services -->
+  <text x="200" y="250" style="font: bold 12px sans-serif;">核心业务服务</text>
+  <rect x="80" y="260" width="100" height="25" rx="3" fill="#4caf50"/>
+  <text x="130" y="275" class="service">👤 用户服务 :8001</text>
+  <rect x="200" y="260" width="100" height="25" rx="3" fill="#4caf50"/>
+  <text x="250" y="275" class="service">🛒 商品服务 :8002</text>
+  <rect x="80" y="290" width="100" height="25" rx="3" fill="#4caf50"/>
+  <text x="130" y="305" class="service">📝 订单服务 :8003</text>
+  <rect x="200" y="290" width="100" height="25" rx="3" fill="#4caf50"/>
+  <text x="250" y="305" class="service">💰 支付服务 :8004</text>
+  
+  <!-- Support Services -->
+  <text x="550" y="250" style="font: bold 12px sans-serif;">辅助业务服务</text>
+  <rect x="420" y="260" width="100" height="25" rx="3" fill="#66bb6a"/>
+  <text x="470" y="275" class="service">🔍 搜索服务 :8005</text>
+  <rect x="540" y="260" width="100" height="25" rx="3" fill="#66bb6a"/>
+  <text x="590" y="275" class="service">🚛 物流服务 :8006</text>
+  <rect x="420" y="290" width="100" height="25" rx="3" fill="#66bb6a"/>
+  <text x="470" y="305" class="service">💬 评论服务 :8007</text>
+  <rect x="540" y="290" width="100" height="25" rx="3" fill="#66bb6a"/>
+  <text x="590" y="305" class="service">🎁 积分服务 :8008</text>
+  <rect x="660" y="260" width="80" height="25" rx="3" fill="#66bb6a"/>
+  <text x="700" y="275" class="service">⚙️ 管理 :8009</text>
+  
+  <!-- Service Governance Layer -->
+  <rect x="50" y="360" width="700" height="60" rx="5" fill="#fff3e0" stroke="#f57c00" stroke-width="2"/>
+  <text x="400" y="380" class="layer-title">服务治理层</text>
+  <rect x="150" y="390" width="120" height="25" rx="3" fill="#ff9800"/>
+  <text x="210" y="405" class="service">📋 Nacos :8848</text>
+  <rect x="340" y="390" width="120" height="25" rx="3" fill="#ff9800"/>
+  <text x="400" y="405" class="service">🛡️ Sentinel :8858</text>
+  <rect x="530" y="390" width="120" height="25" rx="3" fill="#ff9800"/>
+  <text x="590" y="405" class="service">🔍 Zipkin :9411</text>
+  
+  <!-- Data Storage Layer -->
+  <rect x="50" y="450" width="700" height="60" rx="5" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+  <text x="400" y="470" class="layer-title">数据存储层</text>
+  <rect x="120" y="480" width="100" height="25" rx="3" fill="#e91e63"/>
+  <text x="170" y="495" class="service">🗃️ MySQL :3306</text>
+  <rect x="250" y="480" width="100" height="25" rx="3" fill="#e91e63"/>
+  <text x="300" y="495" class="service">⚡ Redis :6379</text>
+  <rect x="380" y="480" width="120" height="25" rx="3" fill="#e91e63"/>
+  <text x="440" y="495" class="service">🔎 Elasticsearch :9200</text>
+  <rect x="530" y="480" width="100" height="25" rx="3" fill="#e91e63"/>
+  <text x="580" y="495" class="service">📊 Kibana :5601</text>
+  
+  <!-- Common Module -->
+  <rect x="250" y="540" width="300" height="40" rx="5" fill="#f1f8e9" stroke="#689f38" stroke-width="2"/>
+  <text x="400" y="565" class="service">📦 公共模块 muying-mall-common</text>
+  
+  <!-- Arrows -->
+  <line x1="400" y1="110" x2="400" y2="135" class="arrow"/>
+  <line x1="400" y1="180" x2="400" y2="205" class="arrow"/>
+  <line x1="400" y1="330" x2="400" y2="355" class="arrow"/>
+  <line x1="400" y1="420" x2="400" y2="445" class="arrow"/>
+  
+  <!-- Connections -->
+  <line x1="400" y1="180" x2="130" y2="255" class="connection"/>
+  <line x1="400" y1="180" x2="250" y2="255" class="connection"/>
+  <line x1="400" y1="180" x2="470" y2="255" class="connection"/>
+  <line x1="400" y1="180" x2="590" y2="255" class="connection"/>
+  
+  <!-- Version Info -->
+  <text x="400" y="590" style="font: 10px sans-serif; text-anchor: middle;">
+    Spring Boot 3.5.5 | Spring Cloud 2025.0.0 | Java 21 | MySQL 8.0 | Redis 7.x | Elasticsearch 8.11.0
+  </text>
+</svg>
