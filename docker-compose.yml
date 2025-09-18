@@ -64,6 +64,22 @@ services:
     networks:
       - muying-mall-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-server
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_VHOST: /muying
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+    networks:
+      - muying-mall-network
+
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin-server
@@ -133,11 +149,13 @@ services:
       NACOS_SERVER_ADDR: nacos:8848
       MYSQL_HOST: mysql
       REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
       SENTINEL_DASHBOARD: sentinel-dashboard:8858
     depends_on:
       - mysql
       - redis
       - nacos
+      - rabbitmq
       - sentinel-dashboard
     networks:
       - muying-mall-network
@@ -175,11 +193,13 @@ services:
       NACOS_SERVER_ADDR: nacos:8848
       MYSQL_HOST: mysql
       REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
       SENTINEL_DASHBOARD: sentinel-dashboard:8858
     depends_on:
       - mysql
       - redis
       - nacos
+      - rabbitmq
       - sentinel-dashboard
       - product-service
     networks:
@@ -319,6 +339,8 @@ volumes:
   nacos_logs:
   nacos_data:
   elasticsearch_data:
+  rabbitmq_data:
+  rabbitmq_logs:
 
 networks:
   muying-mall-network:

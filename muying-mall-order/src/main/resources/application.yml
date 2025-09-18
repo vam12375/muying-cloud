@@ -35,6 +35,46 @@ spring:
         max-wait: -1ms
         max-idle: 8
         min-idle: 0
+        
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:admin}
+    password: ${RABBITMQ_PASSWORD:admin123}
+    virtual-host: /muying
+    # 连接配置
+    connection-timeout: 15000
+    cache:
+      connection:
+        size: 5
+        mode: channel
+      channel:
+        size: 50
+        checkout-timeout: 10000
+    # 消息确认
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+      retry:
+        enabled: true
+        initial-interval: 1000
+        max-attempts: 3
+        max-interval: 10000
+        multiplier: 2
+    # 消费者配置
+    listener:
+      simple:
+        acknowledge-mode: manual
+        concurrency: 5
+        max-concurrency: 10
+        prefetch: 1
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 3
+          max-interval: 10000
+          multiplier: 2
     
   cloud:
     compatibility-verifier:

@@ -48,6 +48,7 @@
         <wechat.version>0.0.3</wechat.version>
         <poi.version>5.3.0</poi.version>
         <micrometer.version>1.14.2</micrometer.version>
+        <amqp.version>3.2.5</amqp.version>
         <docker.image.prefix>muyingmall</docker.image.prefix>
     </properties>
     
@@ -179,6 +180,23 @@
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-core</artifactId>
                 <version>${micrometer.version}</version>
+            </dependency>
+            
+            <!-- RabbitMQ 相关 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-rabbit</artifactId>
+                <version>${amqp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-amqp</artifactId>
+                <version>${amqp.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
