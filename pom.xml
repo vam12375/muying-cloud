@@ -22,15 +22,7 @@
     <modules>
         <module>muying-mall-common</module>
         <module>muying-mall-gateway</module>
-        <module>muying-mall-user</module>
-        <module>muying-mall-product</module>
-        <module>muying-mall-order</module>
-        <module>muying-mall-payment</module>
-        <module>muying-mall-search</module>
-        <module>muying-mall-logistics</module>
-        <module>muying-mall-comment</module>
-        <module>muying-mall-points</module>
-        <module>muying-mall-admin</module>
+        <module>muying-modules</module>
     </modules>
     
     <properties>
@@ -186,17 +178,10 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-amqp</artifactId>
-                <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.amqp</groupId>
                 <artifactId>spring-rabbit</artifactId>
-                <version>${amqp.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.amqp</groupId>
-                <artifactId>spring-amqp</artifactId>
-                <version>${amqp.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
