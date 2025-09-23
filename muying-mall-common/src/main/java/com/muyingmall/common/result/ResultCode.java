@@ -1,8 +1,10 @@
 package com.muyingmall.common.result;
 
 /**
- * 响应码枚举，参考HTTP状态码的语义
+ * @deprecated 此类已迁移到 com.muyingmall.common.core.enums.ResultCode
+ * 请使用新的包路径，此类将在后续版本中移除
  */
+@Deprecated
 public enum ResultCode {
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),
