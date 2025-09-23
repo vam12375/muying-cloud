@@ -64,14 +64,24 @@
   - _需求: 4.1, 5.2_
   - review:true
 
-- [ ] 6. 迁移响应结果封装到core模块
+- [x] 6. 迁移响应结果封装到core模块
+
+
+
+
+
   - 将ApiResponse、result包下的类迁移到core模块
   - 统一响应结果格式，实现Result和PageResult类
   - 创建响应结果构建工具类
   - _需求: 4.1, 5.1_
   - review:true
 
-- [ ] 7. 迁移通用工具类到core模块
+- [x] 7. 迁移通用工具类到core模块
+
+
+
+
+
   - 将util和utils包下的通用工具类迁移到core模块
   - 清理重复的工具类，保留最优实现
   - 为工具类添加完整的JavaDoc文档
@@ -217,3 +227,40 @@
 - 原因: 执行计划步骤5 - 迁移枚举和常量定义到core模块
 - 障碍: 无
 - 状态: 等待后续处理 (交互式审查)
+
+**[2025-09-23 19:18]**
+- 步骤: 6. 迁移响应结果封装到core模块 (完成，需要交互式审查: review:true)
+- 修改内容: 
+  - 将ApiResponse类迁移到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/result/ApiResponse.java)
+  - 创建了增强的ResultCode枚举 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/enums/ResultCode.java)
+  - 将PageResult类迁移到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/result/PageResult.java)
+  - 增强了Result类，添加对ResultCode和ErrorCode的支持
+  - 创建了ResultBuilder构建器类 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/result/ResultBuilder.java)
+  - 创建了ResultUtils工具类 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/result/ResultUtils.java)
+  - 在原位置保留了@Deprecated的兼容类，确保向后兼容
+  - 更新了package-info.java文档，提供完整的使用示例
+- 变更摘要: 成功将响应结果封装迁移到core模块，统一了响应结果格式，创建了构建工具类，保持向后兼容性
+- 原因: 执行计划步骤6 - 迁移响应结果封装到core模块
+- 障碍: 修复了Spring Data依赖问题和方法名冲突问题
+- 状态: 编译通过，等待交互式审查
+**[2025
+-09-23 19:30]**
+- 步骤: 7. 迁移通用工具类到core模块 (完成，需要交互式审查: review:true)
+- 修改内容: 
+  - 分析并合并了重复的JWT工具类，保留了功能更完整的JwtUtils实现
+  - 分析并合并了重复的Redis工具类，整合了分布式锁功能到RedisUtils中
+  - 迁移了EnumUtils到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/utils/EnumUtils.java)
+  - 迁移了SpringContextUtils到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/utils/SpringContextUtils.java)
+  - 迁移了SecurityUtils到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/utils/SecurityUtils.java)
+  - 迁移了JwtUtils到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/utils/JwtUtils.java)
+  - 迁移了RedisUtils到core模块 (muying-mall-common-core/src/main/java/com/muyingmall/common/core/utils/RedisUtils.java)
+  - 为所有迁移的工具类添加了完整的JavaDoc文档，包括使用示例和注意事项
+  - 在原位置创建了@Deprecated兼容类，确保向后兼容性
+  - 更新了core模块的package-info.java文档，提供了完整的使用指南
+  - 添加了必要的依赖到core模块的pom.xml (JWT、Redis、Spring Security)
+- 变更摘要: 成功将通用工具类迁移到core模块，清理了重复实现，添加了完整文档，保持了向后兼容性，编译测试通过
+- 原因: 执行计划步骤7 - 迁移通用工具类到core模块
+- 障碍: 初始编译失败，通过添加必要依赖解决
+- 状态: 等待交互式审查- 用户确认
+状态: 成功 - 用户通过'next'关键词结束审查
+- 交互式审查脚本退出信息: 用户通过'next'关键词结束审查
