@@ -6,8 +6,15 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * Spring上下文工具类，用于在非Spring管理的类中获取Bean
+ * Spring上下文工具类 - 兼容性包装器
+ * 
+ * @deprecated 该类已迁移到 {@link com.muyingmall.common.core.utils.SpringContextUtils}，请使用新的位置。
+ * 此类仅为向后兼容而保留，将在未来版本中移除。
+ * 
+ * @author 母婴商城开发团队
+ * @since 2025-09-23
  */
+@Deprecated
 @Component
 public class SpringContextUtil implements ApplicationContextAware {
 
@@ -19,30 +26,34 @@ public class SpringContextUtil implements ApplicationContextAware {
     }
 
     /**
-     * 获取ApplicationContext
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.SpringContextUtils#getApplicationContext()}
      */
+    @Deprecated
     public static ApplicationContext getApplicationContext() {
-        return applicationContext;
+        return com.muyingmall.common.core.utils.SpringContextUtils.getApplicationContext();
     }
 
     /**
-     * 通过name获取Bean
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.SpringContextUtils#getBean(String)}
      */
+    @Deprecated
     public static Object getBean(String name) {
-        return getApplicationContext().getBean(name);
+        return com.muyingmall.common.core.utils.SpringContextUtils.getBean(name);
     }
 
     /**
-     * 通过class获取Bean
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.SpringContextUtils#getBean(Class)}
      */
+    @Deprecated
     public static <T> T getBean(Class<T> clazz) {
-        return getApplicationContext().getBean(clazz);
+        return com.muyingmall.common.core.utils.SpringContextUtils.getBean(clazz);
     }
 
     /**
-     * 通过name和class获取Bean
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.SpringContextUtils#getBean(String, Class)}
      */
+    @Deprecated
     public static <T> T getBean(String name, Class<T> clazz) {
-        return getApplicationContext().getBean(name, clazz);
+        return com.muyingmall.common.core.utils.SpringContextUtils.getBean(name, clazz);
     }
 }
