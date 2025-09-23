@@ -1,0 +1,10 @@
+# 测试环境配置
+spring:
+  profiles:
+    active: test
+  
+# 日志配置
+logging:
+  level:
+    com.muyingmall: DEBUG
+    root: INFO
