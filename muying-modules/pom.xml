@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.muyingmall</groupId>
+        <artifactId>muying-mall-microservices</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+    <artifactId>muying-modules</artifactId>
+    <packaging>pom</packaging>
+    <name>muying-modules</name>
+    <description>母婴商城业务服务模块集合</description>
+    
+    <modules>
+        <module>muying-mall-user</module>
+        <module>muying-mall-product</module>
+        <module>muying-mall-order</module>
+        <module>muying-mall-payment</module>
+        <module>muying-mall-search</module>
+        <module>muying-mall-logistics</module>
+        <module>muying-mall-comment</module>
+        <module>muying-mall-points</module>
+        <module>muying-mall-admin</module>
+    </modules>
+</project>
