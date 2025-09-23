@@ -1,0 +1,160 @@
+# Nacos配置中心示例配置
+# 这些配置应该在Nacos配置中心进行管理
+
+# 数据库配置（所有服务共享）
+spring:
+  datasource:
+    # 用户服务数据库
+    user-service:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/muying_mall_user?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: admin
+    
+    # 商品服务数据库
+    product-service:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/muying_mall_product?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: admin
+    
+    # 订单服务数据库
+    order-service:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/muying_mall_order?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: admin
+    
+    # 支付服务数据库
+    payment-service:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/muying_mall_payment?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: admin
+
+# Redis配置（所有服务共享）
+redis:
+  host: localhost
+  port: 6379
+  password: 
+  database: 0
+  timeout: 10000
+
+# RabbitMQ配置（所有服务共享）
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+  virtual-host: /muying-mall
+  
+  # 交换机配置
+  exchanges:
+    order-event: order-event-exchange
+    payment-event: payment-event-exchange
+    user-event: user-event-exchange
+    product-event: product-event-exchange
+  
+  # 队列配置
+  queues:
+    order-create: order-create-queue
+    order-cancel: order-cancel-queue
+    order-complete: order-complete-queue
+    payment-success: payment-success-queue
+    payment-refund: payment-refund-queue
+    user-register: user-register-queue
+    product-stock-update: product-stock-update-queue
+
+# Elasticsearch配置
+elasticsearch:
+  host: localhost
+  port: 9200
+  scheme: http
+  username: 
+  password: 
+  connection-timeout: 5000
+  socket-timeout: 30000
+
+# 支付宝配置
+alipay:
+  app-id: your-app-id
+  private-key: your-private-key
+  public-key: alipay-public-key
+  gateway-url: https://openapi.alipay.com/gateway.do
+  notify-url: https://muyingmall.com/api/payment/alipay/notify
+  return-url: https://muyingmall.com/payment/success
+
+# 微信支付配置
+wechat-pay:
+  app-id: your-app-id
+  mch-id: your-mch-id
+  api-key: your-api-key
+  cert-path: /path/to/cert
+  notify-url: https://muyingmall.com/api/payment/wechat/notify
+
+# Seata分布式事务配置
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: muying-mall-group
+  enable-auto-data-source-proxy: true
+  config:
+    type: nacos
+    nacos:
+      namespace: dev
+      serverAddr: localhost:8848
+      group: SEATA_GROUP
+      username: nacos
+      password: nacos
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: localhost:8848
+      namespace: dev
+      group: SEATA_GROUP
+      username: nacos
+      password: nacos
+
+# 限流配置
+rate-limiter:
+  enabled: true
+  default-replenish-rate: 10
+  default-burst-capacity: 20
+  
+  # 特定接口限流配置
+  apis:
+    login:
+      replenish-rate: 5
+      burst-capacity: 10
+    register:
+      replenish-rate: 3
+      burst-capacity: 6
+    order-create:
+      replenish-rate: 10
+      burst-capacity: 20
+
+# 监控告警配置
+monitoring:
+  prometheus:
+    enabled: true
+    endpoint: /actuator/prometheus
+  
+  alerts:
+    # 服务可用性告警
+    service-down:
+      enabled: true
+      threshold: 1
+      duration: 60
+    
+    # 响应时间告警
+    response-time:
+      enabled: true
+      threshold: 1000
+      duration: 60
+    
+    # 错误率告警
+    error-rate:
+      enabled: true
+      threshold: 0.1
+      duration: 60
