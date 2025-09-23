@@ -1,127 +1,75 @@
 package com.muyingmall.common.utils;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 
 /**
- * JWT工具类
- * 用于生成和验证JWT令牌
+ * JWT工具类 - 兼容性包装器
+ * 
+ * @deprecated 该类已迁移到 {@link com.muyingmall.common.core.utils.JwtUtils}，请使用新的位置。
+ * 此类仅为向后兼容而保留，将在未来版本中移除。
+ * 
+ * @author 母婴商城开发团队
+ * @since 2025-09-23
  */
+@Deprecated
 @Slf4j
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret:muyingmall-secret-key-for-jwt-token-generation}")
-    private String secret;
-
-    @Value("${jwt.expiration:86400}")
-    private Long expiration;
+    @Autowired
+    private com.muyingmall.common.core.utils.JwtUtils coreJwtUtils;
 
     /**
-     * 生成JWT令牌
-     *
-     * @param userId 用户ID
-     * @param username 用户名
-     * @param claims 附加声明
-     * @return JWT令牌
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.JwtUtils#generateToken(Integer, String, String, Map)}
      */
+    @Deprecated
     public String generateToken(Integer userId, String username, Map<String, Object> claims) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration * 1000);
-        
-        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        
-        JwtBuilder builder = Jwts.builder()
-                .subject(String.valueOf(userId))
-                .claim("username", username)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(key);
-        
-        if (claims != null && !claims.isEmpty()) {
-            builder.claims(claims);
-        }
-        
-        return builder.compact();
+        return coreJwtUtils.generateToken(userId, username, null, claims);
     }
 
     /**
-     * 验证JWT令牌
-     *
-     * @param token JWT令牌
-     * @return 是否有效
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.JwtUtils#validateToken(String)}
      */
+    @Deprecated
     public boolean validateToken(String token) {
-        try {
-            SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-            Jwts.parser()
-                    .verifyWith(key)
-                    .build()
-                    .parseSignedClaims(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error("JWT令牌验证失败: {}", e.getMessage());
-            return false;
-        }
+        return coreJwtUtils.validateToken(token);
     }
 
     /**
-     * 从JWT令牌中获取用户ID
-     *
-     * @param token JWT令牌
-     * @return 用户ID
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.JwtUtils#getUserIdFromToken(String)}
      */
+    @Deprecated
     public Integer getUserIdFromToken(String token) {
-        Claims claims = getClaimsFromToken(token);
-        return Integer.valueOf(claims.getSubject());
+        return coreJwtUtils.getUserIdFromToken(token);
     }
 
     /**
-     * 从JWT令牌中获取用户名
-     *
-     * @param token JWT令牌
-     * @return 用户名
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.JwtUtils#getUsernameFromToken(String)}
      */
+    @Deprecated
     public String getUsernameFromToken(String token) {
-        Claims claims = getClaimsFromToken(token);
-        return claims.get("username", String.class);
+        return coreJwtUtils.getUsernameFromToken(token);
     }
 
     /**
-     * 从JWT令牌中获取Claims
-     *
-     * @param token JWT令牌
-     * @return Claims
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.JwtUtils#getClaimsFromToken(String)}
      */
+    @Deprecated
     private Claims getClaimsFromToken(String token) {
-        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return coreJwtUtils.getClaimsFromToken(token);
     }
 
     /**
-     * 判断令牌是否过期
-     *
-     * @param token JWT令牌
-     * @return 是否过期
+     * @deprecated 使用 {@link com.muyingmall.common.core.utils.JwtUtils#isTokenExpired(String)}
      */
+    @Deprecated
     public boolean isTokenExpired(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            return claims.getExpiration().before(new Date());
-        } catch (Exception e) {
-            return true;
-        }
+        return coreJwtUtils.isTokenExpired(token);
     }
 }
