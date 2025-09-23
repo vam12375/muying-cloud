@@ -1,13 +1,16 @@
 package com.muyingmall.common.core.result;
 
 import java.io.Serializable;
+import com.muyingmall.common.core.enums.ErrorCode;
+import com.muyingmall.common.core.enums.ResultCode;
 
 /**
  * 统一响应结果封装类
+ * 提供标准化的API响应格式
  * 
  * @param <T> 数据类型
- * @author muying-mall
- * @since 1.0.0
+ * @author 青柠檬
+ * @since 2025-09-23
  */
 public class Result<T> implements Serializable {
     
@@ -164,12 +167,58 @@ public class Result<T> implements Serializable {
     }
     
     /**
+     * 错误响应（使用ErrorCode枚举）
+     *
+     * @param errorCode 错误码枚举
+     * @param <T>       数据类型
+     * @return 响应结果
+     */
+    public static <T> Result<T> error(ErrorCode errorCode) {
+        return new Result<>(errorCode.getCode(), errorCode.getMessage(), null);
+    }
+
+    /**
+     * 错误响应（使用ErrorCode枚举，自定义消息）
+     *
+     * @param errorCode 错误码枚举
+     * @param message   自定义错误消息
+     * @param <T>       数据类型
+     * @return 响应结果
+     */
+    public static <T> Result<T> error(ErrorCode errorCode, String message) {
+        return new Result<>(errorCode.getCode(), message, null);
+    }
+
+    /**
+     * 错误响应（使用ResultCode枚举）
+     *
+     * @param resultCode 结果码枚举
+     * @param <T>        数据类型
+     * @return 响应结果
+     */
+    public static <T> Result<T> error(ResultCode resultCode) {
+        return new Result<>(resultCode.getCode(), resultCode.getMessage(), null);
+    }
+
+    /**
+     * 错误响应（使用ResultCode枚举，自定义消息）
+     *
+     * @param resultCode 结果码枚举
+     * @param message    自定义错误消息
+     * @param <T>        数据类型
+     * @return 响应结果
+     */
+    public static <T> Result<T> error(ResultCode resultCode, String message) {
+        return new Result<>(resultCode.getCode(), message, null);
+    }
+    
+    /**
      * 判断是否成功
      *
      * @return 是否成功
      */
     public boolean isSuccess() {
-        return SUCCESS_CODE.equals(this.code);
+        return ResultCode.isSuccess(this.code);
     }
     
     /**
@@ -178,7 +227,7 @@ public class Result<T> implements Serializable {
      * @return 是否失败
      */
     public boolean isError() {
-        return !SUCCESS_CODE.equals(this.code);
+        return !isSuccess();
     }
 
     // Getter and Setter methods
