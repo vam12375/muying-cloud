@@ -1,0 +1,8 @@
+# Auto Configuration
+# 聚合模块自动配置所有子模块
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.muyingmall.common.redis.config.RedisAutoConfiguration,\
+com.muyingmall.common.swagger.config.SwaggerAutoConfiguration,\
+com.muyingmall.common.security.config.SecurityAutoConfiguration,\
+com.muyingmall.common.rabbitmq.config.RabbitMQAutoConfiguration,\
+com.muyingmall.common.web.config.WebAutoConfiguration

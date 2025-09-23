@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.muyingmall</groupId>
+        <artifactId>muying-mall-common</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    
+    <artifactId>muying-mall-common-all</artifactId>
+    <packaging>jar</packaging>
+    <name>muying-mall-common-all</name>
+    <description>母婴商城公共模块 - 聚合模块(向后兼容)</description>
+    
+    <dependencies>
+        <!-- 聚合所有功能模块 -->
+        <dependency>
+            <groupId>com.muyingmall</groupId>
+            <artifactId>muying-mall-common-core</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.muyingmall</groupId>
+            <artifactId>muying-mall-common-redis</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.muyingmall</groupId>
+            <artifactId>muying-mall-common-swagger</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.muyingmall</groupId>
+            <artifactId>muying-mall-common-security</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.muyingmall</groupId>
+            <artifactId>muying-mall-common-rabbitmq</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.muyingmall</groupId>
+            <artifactId>muying-mall-common-web</artifactId>
+        </dependency>
+    </dependencies>
+</project>
