@@ -1,6 +1,6 @@
 package com.muyingmall.search.service;
 
-import com.muyingmall.common.dto.PageResult;
+import com.muyingmall.common.core.result.PageResult;
 import com.muyingmall.search.document.ProductDocument;
 import com.muyingmall.search.dto.SearchRequest;
 

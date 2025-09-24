@@ -88,10 +88,11 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
         </dependency>
         
-        <!-- 公共模块 -->
+        <!-- 公共模块 - 使用聚合模块确保向后兼容 -->
         <dependency>
             <groupId>com.muyingmall</groupId>
-            <artifactId>muying-mall-common</artifactId>
+            <artifactId>muying-mall-common-all</artifactId>
+            <version>1.0.0</version>
         </dependency>
         
         <!-- JSON处理 -->
