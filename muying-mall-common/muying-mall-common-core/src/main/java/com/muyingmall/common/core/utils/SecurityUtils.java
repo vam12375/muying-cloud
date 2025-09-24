@@ -9,46 +9,19 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * 安全工具类
+ * 安全工具类 - 兼容层
  * 
- * <p>提供安全相关的通用功能，包括密码加密、随机数生成、Spring Security集成等。</p>
+ * <p>该类的部分功能已迁移到Security模块，此处保留基础功能用于向后兼容。</p>
  * 
- * <p>主要功能：</p>
+ * <p>推荐使用Security模块中的增强版本：</p>
  * <ul>
- *   <li>密码加密和验证</li>
- *   <li>随机盐值生成</li>
- *   <li>MD5和SHA256哈希计算</li>
- *   <li>Spring Security上下文操作（可选）</li>
- *   <li>随机字符串生成</li>
- * </ul>
- * 
- * <p>使用示例：</p>
- * <pre>{@code
- * // 密码加密
- * String salt = SecurityUtils.generateSalt();
- * String hashedPassword = SecurityUtils.hashPassword("password123", salt);
- * 
- * // 密码验证
- * boolean isValid = SecurityUtils.verifyPassword("password123", hashedPassword, salt);
- * 
- * // 生成随机字符串
- * String randomStr = SecurityUtils.generateRandomString(16);
- * 
- * // Spring Security操作（需要Spring Security环境）
- * String username = SecurityUtils.getCurrentUsername();
- * boolean authenticated = SecurityUtils.isAuthenticated();
- * }</pre>
- * 
- * <p>注意事项：</p>
- * <ul>
- *   <li>Spring Security相关方法只有在Spring Security可用时才能正常工作</li>
- *   <li>密码加密使用SHA-256算法，建议使用随机盐值</li>
- *   <li>所有方法都进行了异常处理，失败时会记录日志</li>
+ *   <li>{@link com.muyingmall.common.security.crypto.PasswordEncoder} - 密码加密服务</li>
+ *   <li>{@link com.muyingmall.common.security.utils.AuthenticationUtils} - 认证工具类</li>
  * </ul>
  * 
  * @author 母婴商城开发团队
  * @since 2025-09-23
- * @version 1.0
+ * @version 1.0 (兼容层)
  */
 @Slf4j
 public class SecurityUtils {

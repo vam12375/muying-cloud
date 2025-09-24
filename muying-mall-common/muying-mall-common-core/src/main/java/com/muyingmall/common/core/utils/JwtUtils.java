@@ -17,44 +17,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * JWT工具类
+ * JWT工具类 - 兼容层
  * 
- * <p>提供JWT令牌的生成、验证和解析功能，支持用户认证和授权。</p>
+ * <p>该类已迁移到Security模块，此处保留用于向后兼容。</p>
  * 
- * <p>主要功能：</p>
- * <ul>
- *   <li>生成JWT令牌</li>
- *   <li>验证JWT令牌有效性</li>
- *   <li>从令牌中提取用户信息</li>
- *   <li>支持自定义声明</li>
- * </ul>
- * 
- * <p>使用示例：</p>
- * <pre>{@code
- * @Autowired
- * private JwtUtils jwtUtils;
- * 
- * // 生成令牌
- * String token = jwtUtils.generateToken(1001, "admin", "ADMIN");
- * 
- * // 验证令牌
- * boolean isValid = jwtUtils.validateToken(token);
- * 
- * // 获取用户信息
- * Integer userId = jwtUtils.getUserIdFromToken(token);
- * String username = jwtUtils.getUsernameFromToken(token);
- * }</pre>
- * 
- * <p>配置参数：</p>
- * <ul>
- *   <li>jwt.secret: JWT签名密钥，建议使用64字节以上的强密钥</li>
- *   <li>jwt.expiration: 令牌过期时间（秒），默认86400秒（24小时）</li>
- * </ul>
+ * @deprecated 该类已迁移到 {@link com.muyingmall.common.security.jwt.JwtUtils}，
+ *             请使用Security模块中的增强版本。此类将在未来版本中移除。
  * 
  * @author 母婴商城开发团队
  * @since 2025-09-23
- * @version 1.0
+ * @version 1.0 (兼容层)
  */
+@Deprecated(since = "1.0", forRemoval = true)
 @Component
 public class JwtUtils {
 
