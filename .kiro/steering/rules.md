@@ -565,7 +565,7 @@ if __name__ == "__main__":
             active_session = False
             break
 ```
-每次修改后都规范注释，提交信息，作者为青柠檬，时间为当前时间。
+每次修改后都规范简易注释，作者为青柠檬，时间为当前时间。
 
 <!------------------------------------------------------------------------------------
    Add Rules to this file or a short description and have Kiro refine them for you:   
