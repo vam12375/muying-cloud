@@ -27,14 +27,49 @@ public class UserPoints implements Serializable {
     private Long userId;
 
     /**
-     * 积分总数
+     * 当前积分余额
      */
     private Integer points;
+
+    /**
+     * 累计获得积分
+     */
+    private Integer totalEarned;
+
+    /**
+     * 累计使用积分
+     */
+    private Integer totalUsed;
 
     /**
      * 会员等级
      */
     private String level;
+
+    // 兼容性方法
+    public Integer getCurrentPoints() {
+        return this.points;
+    }
+
+    public void setCurrentPoints(Integer currentPoints) {
+        this.points = currentPoints;
+    }
+
+    public Integer getTotalEarned() {
+        return this.totalEarned != null ? this.totalEarned : 0;
+    }
+
+    public void setTotalEarned(Integer totalEarned) {
+        this.totalEarned = totalEarned;
+    }
+
+    public Integer getTotalUsed() {
+        return this.totalUsed != null ? this.totalUsed : 0;
+    }
+
+    public void setTotalUsed(Integer totalUsed) {
+        this.totalUsed = totalUsed;
+    }
 
     /**
      * 创建时间

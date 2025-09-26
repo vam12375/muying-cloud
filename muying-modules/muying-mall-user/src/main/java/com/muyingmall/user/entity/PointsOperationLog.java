@@ -70,4 +70,19 @@ public class PointsOperationLog implements Serializable {
     @TableField("create_time")
     private LocalDateTime createTime;
 
+    // 兼容性方法
+    public void setPoints(Integer points) {
+        this.pointsChange = points;
+    }
+
+    public void setPoints(String points) {
+        if (points != null && !points.isEmpty()) {
+            try {
+                this.pointsChange = Integer.valueOf(points);
+            } catch (NumberFormatException e) {
+                // 忽略转换错误
+            }
+        }
+    }
+
 }
