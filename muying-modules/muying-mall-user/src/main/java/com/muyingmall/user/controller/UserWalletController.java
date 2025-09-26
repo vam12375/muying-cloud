@@ -7,9 +7,8 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.muyingmall.common.api.CommonPage;
-import com.muyingmall.common.api.CommonResult;
-import com.muyingmall.common.api.ResultCode;
+import com.muyingmall.common.core.result.ApiResponse;
+import com.muyingmall.common.core.result.PageResult;
 import com.muyingmall.common.exception.BusinessException;
 import com.muyingmall.user.config.AlipayConfig;
 import com.muyingmall.user.dto.WalletInfoDTO;
@@ -19,8 +18,8 @@ import com.muyingmall.user.entity.AccountTransaction;
 import com.muyingmall.user.entity.UserAccount;
 import com.muyingmall.user.mapper.AccountTransactionMapper;
 import com.muyingmall.user.service.UserAccountService;
-import com.muyingmall.common.util.SecurityUtil;
-import com.muyingmall.common.util.SpringContextUtil;
+import com.muyingmall.common.core.utils.SecurityUtils;
+import com.muyingmall.common.core.utils.SpringContextUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,7 +51,7 @@ public class UserWalletController {
 
     @Operation(summary = "获取钱包信息")
     @GetMapping("/info")
-    public CommonResult<WalletInfoDTO> getWalletInfo() {
+    public ApiResponse<WalletInfoDTO> getWalletInfo() {
         // 添加详细日志
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("UserWalletController.getWalletInfo - 当前认证对象: {}", authentication);
@@ -73,11 +72,11 @@ public class UserWalletController {
         // 从当前登录用户获取用户ID
         Integer userId = userAccountService.getCurrentUserId();
         log.info("UserAccountService.getCurrentUserId() 返回的用户ID: {}", userId);
-        log.info("SecurityUtil.getCurrentUserId() 返回的用户ID: {}", SecurityUtil.getCurrentUserId());
+        log.info("SecurityUtils.getCurrentUserId() 返回的用户ID: {}", SecurityUtils.getCurrentUserId());
 
         if (userId == null) {
             log.error("获取钱包信息失败：用户ID为null");
-            return CommonResult.unauthorized(null);
+            return ApiResponse.unauthorized("用户未认证");
         }
 
         try {
@@ -85,7 +84,7 @@ public class UserWalletController {
             UserAccount userAccount = userAccountService.getUserAccountByUserId(userId);
             if (userAccount == null) {
                 log.error("获取钱包信息失败：用户ID={}的账户不存在", userId);
-                return CommonResult.failed("账户不存在");
+                return ApiResponse.failed("账户不存在");
             }
             log.info("找到用户账户: {}", userAccount);
 
@@ -102,16 +101,16 @@ public class UserWalletController {
 
             log.info("获取钱包信息成功：{}", walletInfoDTO);
 
-            return CommonResult.success(walletInfoDTO);
+            return ApiResponse.success(walletInfoDTO);
         } catch (Exception e) {
             log.error("获取钱包信息失败", e);
-            return CommonResult.failed("获取钱包信息失败: " + e.getMessage());
+            return ApiResponse.failed("获取钱包信息失败: " + e.getMessage());
         }
     }
 
     @Operation(summary = "获取钱包余额")
     @GetMapping("/balance")
-    public CommonResult<Map<String, Object>> getWalletBalance() {
+    public ApiResponse<Map<String, Object>> getWalletBalance() {
         // 添加详细日志
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("UserWalletController.getWalletBalance - 当前认证对象: {}", authentication);
@@ -122,7 +121,7 @@ public class UserWalletController {
 
         if (userId == null) {
             log.error("获取钱包余额失败：用户ID为null");
-            return CommonResult.unauthorized(null);
+            return ApiResponse.unauthorized("用户未认证");
         }
 
         try {
@@ -130,7 +129,7 @@ public class UserWalletController {
             UserAccount userAccount = userAccountService.getUserAccountByUserId(userId);
             if (userAccount == null) {
                 log.error("获取钱包余额失败：用户ID={}的账户不存在", userId);
-                return CommonResult.failed("账户不存在");
+                return ApiResponse.failed("账户不存在");
             }
             log.info("找到用户账户: {}", userAccount);
 
@@ -141,16 +140,16 @@ public class UserWalletController {
 
             log.info("获取钱包余额成功：{}", result);
 
-            return CommonResult.success(result);
+            return ApiResponse.success(result);
         } catch (Exception e) {
             log.error("获取钱包余额失败", e);
-            return CommonResult.failed("获取钱包余额失败: " + e.getMessage());
+            return ApiResponse.failed("获取钱包余额失败: " + e.getMessage());
         }
     }
 
     @Operation(summary = "获取交易记录")
     @GetMapping("/transactions")
-    public CommonResult<Map<String, Object>> getTransactions(
+    public ApiResponse<Map<String, Object>> getTransactions(
             @Parameter(description = "页码", example = "1") @RequestParam(value = "page", defaultValue = "1") Integer page,
             @Parameter(description = "每页数量", example = "10") @RequestParam(value = "size", defaultValue = "10") Integer size,
             @Parameter(description = "交易类型: 1-充值，2-消费，3-退款，4-管理员调整") @RequestParam(value = "type", required = false) Integer type,
@@ -167,7 +166,7 @@ public class UserWalletController {
 
         if (userId == null) {
             log.error("获取交易记录失败：用户ID为null");
-            return CommonResult.unauthorized(null);
+            return ApiResponse.unauthorized("用户未认证");
         }
 
         try {
@@ -188,16 +187,16 @@ public class UserWalletController {
 
             log.info("获取交易记录成功，总记录数：{}", transactions.getTotal());
 
-            return CommonResult.success(result);
+            return ApiResponse.success(result);
         } catch (Exception e) {
             log.error("获取交易记录失败", e);
-            return CommonResult.failed("获取交易记录失败: " + e.getMessage());
+            return ApiResponse.failed("获取交易记录失败: " + e.getMessage());
         }
     }
 
     @Operation(summary = "创建充值订单")
     @PostMapping("/recharge")
-    public CommonResult<Map<String, Object>> createRechargeOrder(
+    public ApiResponse<Map<String, Object>> createRechargeOrder(
             @RequestBody RechargeRequestDTO rechargeRequest) {
 
         // 添加详细日志
@@ -210,7 +209,7 @@ public class UserWalletController {
 
         if (userId == null) {
             log.error("创建充值订单失败：用户ID为null");
-            return CommonResult.unauthorized(null);
+            return ApiResponse.unauthorized("用户未认证");
         }
 
         try {
@@ -220,13 +219,13 @@ public class UserWalletController {
 
             if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
                 log.error("创建充值订单失败：充值金额必须大于0，当前金额={}", amount);
-                return CommonResult.validateFailed("充值金额必须大于0");
+                return ApiResponse.validateFailed("充值金额必须大于0");
             }
 
             // 验证支付方式
             if (!"alipay".equals(paymentMethod) && !"wechat".equals(paymentMethod)) {
                 log.error("创建充值订单失败：不支持的支付方式，paymentMethod={}", paymentMethod);
-                return CommonResult.validateFailed("不支持的支付方式");
+                return ApiResponse.validateFailed("不支持的支付方式");
             }
 
             log.info("开始创建充值订单，userId={}, amount={}, paymentMethod={}", userId, amount, paymentMethod);
@@ -235,23 +234,23 @@ public class UserWalletController {
             try {
                 Map<String, Object> result = userAccountService.createRechargeOrder(userId, amount, paymentMethod);
                 log.info("创建充值订单成功：{}", result);
-                return CommonResult.success(result);
+                return ApiResponse.success(result);
             } catch (Exception e) {
                 log.error("调用userAccountService.createRechargeOrder时发生异常", e);
                 // 提供更详细的错误信息
                 String errorMessage = "创建充值订单失败: " + (e.getMessage() != null ? e.getMessage() : "未知错误");
                 log.error(errorMessage);
-                return CommonResult.failed(errorMessage);
+                return ApiResponse.failed(errorMessage);
             }
         } catch (Exception e) {
             log.error("创建充值订单过程中发生未预期的异常", e);
-            return CommonResult.failed("创建充值订单失败: " + (e.getMessage() != null ? e.getMessage() : "系统错误，请稍后再试"));
+            return ApiResponse.failed("创建充值订单失败: " + (e.getMessage() != null ? e.getMessage() : "系统错误，请稍后再试"));
         }
     }
 
     @Operation(summary = "查询充值订单状态")
     @GetMapping("/recharge/{orderNo}/status")
-    public CommonResult<Map<String, Object>> queryRechargeStatus(
+    public ApiResponse<Map<String, Object>> queryRechargeStatus(
             @Parameter(description = "充值订单号", required = true) @PathVariable(value = "orderNo") String orderNo) {
 
         log.info("查询充值订单状态，orderNo={}", orderNo);
@@ -260,7 +259,7 @@ public class UserWalletController {
         Integer userId = userAccountService.getCurrentUserId();
         if (userId == null) {
             log.error("查询充值订单状态失败：用户ID为null");
-            return CommonResult.unauthorized(null);
+            return ApiResponse.unauthorized("用户未认证");
         }
 
         try {
@@ -274,7 +273,7 @@ public class UserWalletController {
 
             if (transaction == null) {
                 log.error("查询充值订单状态失败：订单不存在，orderNo={}", orderNo);
-                return CommonResult.validateFailed("充值订单不存在");
+                return ApiResponse.validateFailed("充值订单不存在");
             }
 
             Map<String, Object> result = new HashMap<>();
@@ -290,16 +289,16 @@ public class UserWalletController {
 
             log.info("查询充值订单状态成功：{}", result);
 
-            return CommonResult.success(result);
+            return ApiResponse.success(result);
         } catch (Exception e) {
             log.error("查询充值订单状态失败", e);
-            return CommonResult.failed("查询充值订单状态失败: " + e.getMessage());
+            return ApiResponse.failed("查询充值订单状态失败: " + e.getMessage());
         }
     }
 
     @Operation(summary = "获取充值订单支付表单")
     @GetMapping("/recharge/form")
-    public CommonResult<Map<String, Object>> getRechargeOrderForm(
+    public ApiResponse<Map<String, Object>> getRechargeOrderForm(
             @Parameter(description = "充值订单号", required = true) @RequestParam(value = "orderNo") String orderNo) {
 
         log.info("获取充值订单支付表单，orderNo={}", orderNo);
@@ -308,7 +307,7 @@ public class UserWalletController {
         Integer userId = userAccountService.getCurrentUserId();
         if (userId == null) {
             log.error("获取充值订单支付表单失败：用户ID为null");
-            return CommonResult.unauthorized(null);
+            return ApiResponse.unauthorized("用户未认证");
         }
 
         try {
@@ -322,13 +321,13 @@ public class UserWalletController {
 
             if (transaction == null) {
                 log.error("获取充值订单支付表单失败：订单不存在，orderNo={}", orderNo);
-                return CommonResult.validateFailed("充值订单不存在");
+                return ApiResponse.validateFailed("充值订单不存在");
             }
 
             // 获取支付表单
             try {
                 // 获取AlipayConfig实例
-                AlipayConfig alipayConfig = SpringContextUtil.getBean(AlipayConfig.class);
+                AlipayConfig alipayConfig = SpringContextUtils.getBean(AlipayConfig.class);
 
                 // 创建AlipayClient实例
                 AlipayClient alipayClient = new DefaultAlipayClient(
@@ -364,14 +363,14 @@ public class UserWalletController {
                 result.put("formHtml", formHtml);
                 log.info("获取充值订单支付表单成功");
 
-                return CommonResult.success(result);
+                return ApiResponse.success(result);
             } catch (Exception e) {
                 log.error("获取充值订单支付表单失败: {}", e.getMessage(), e);
-                return CommonResult.failed("获取充值订单支付表单失败: " + e.getMessage());
+                return ApiResponse.failed("获取充值订单支付表单失败: " + e.getMessage());
             }
         } catch (Exception e) {
             log.error("获取充值订单支付表单过程中发生未预期的异常", e);
-            return CommonResult.failed("获取充值订单支付表单失败: " + (e.getMessage() != null ? e.getMessage() : "系统错误，请稍后再试"));
+            return ApiResponse.failed("获取充值订单支付表单失败: " + (e.getMessage() != null ? e.getMessage() : "系统错误，请稍后再试"));
         }
     }
 }

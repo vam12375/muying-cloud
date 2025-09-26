@@ -8,7 +8,8 @@
       "Bash(taskkill:*)",
       "Bash(find:*)",
       "Bash(javac:*)",
-      "Bash(java:*)"
+      "Bash(java:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

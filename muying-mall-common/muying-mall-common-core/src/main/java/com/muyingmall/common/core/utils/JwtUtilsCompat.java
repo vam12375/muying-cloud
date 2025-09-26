@@ -27,7 +27,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#generateToken(Integer, String, String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public String generateToken(Integer userId, String username, String role) {
@@ -35,7 +35,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#generateToken(Integer, String, String, Map)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public String generateToken(Integer userId, String username, String role, Map<String, Object> customClaims) {
@@ -43,7 +43,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#getClaimsFromToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public Claims getClaimsFromToken(String token) {
@@ -51,7 +51,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#validateToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public boolean validateToken(String token) {
@@ -59,7 +59,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#getUsernameFromToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public String getUsernameFromToken(String token) {
@@ -67,7 +67,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#getUserIdFromToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public Integer getUserIdFromToken(String token) {
@@ -75,7 +75,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#getRoleFromToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public String getRoleFromToken(String token) {
@@ -83,7 +83,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#isTokenExpired(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public boolean isTokenExpired(String token) {
@@ -91,7 +91,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#getExpirationFromToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public Date getExpirationFromToken(String token) {
@@ -99,7 +99,7 @@ public class JwtUtilsCompat {
     }
 
     /**
-     * @deprecated 请使用 {@link com.muyingmall.common.security.jwt.JwtUtils#getIssuedAtFromToken(String)}
+     * @deprecated 请使用
      */
     @Deprecated(since = "1.0", forRemoval = true)
     public Date getIssuedAtFromToken(String token) {

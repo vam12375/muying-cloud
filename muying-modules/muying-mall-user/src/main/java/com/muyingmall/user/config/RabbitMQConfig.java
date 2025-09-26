@@ -1,6 +1,6 @@
 package com.muyingmall.user.config;
 
-import com.muyingmall.common.constants.RabbitMQConstants;
+import com.muyingmall.common.core.constant.RabbitMQConstants;
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package com.muyingmall.gateway.filter;
 
 import com.alibaba.fastjson2.JSON;
 import com.muyingmall.common.dto.Result;
-import com.muyingmall.common.util.JwtUtils;
+import com.muyingmall.common.security.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -57,16 +57,20 @@ public class AuthFilter implements GlobalFilter, Ordered {
         
         // 验证token
         try {
+            // 使用新版JwtUtils的validateToken方法（单参数版本）
             if (!jwtUtils.validateToken(token)) {
                 return handleUnauthorized(exchange, "认证令牌无效或已过期");
             }
-            
-            // 将用户信息添加到请求头
-            var claims = jwtUtils.getClaimsFromToken(token);
+
+            // 由于兼容类没有getClaimsFromToken方法，需要使用getUsernameFromToken等方法分别获取信息
+            String username = jwtUtils.getUsernameFromToken(token);
+            Integer userId = jwtUtils.getUserIdFromToken(token);
+            String role = jwtUtils.getRoleFromToken(token);
+
             ServerHttpRequest newRequest = request.mutate()
-                .header("X-User-Id", String.valueOf(claims.get("userId")))
-                .header("X-Username", String.valueOf(claims.get("username")))
-                .header("X-User-Role", String.valueOf(claims.get("role")))
+                .header("X-User-Id", userId != null ? String.valueOf(userId) : "")
+                .header("X-Username", username != null ? username : "")
+                .header("X-User-Role", role != null ? role : "")
                 .build();
             
             return chain.filter(exchange.mutate().request(newRequest).build());

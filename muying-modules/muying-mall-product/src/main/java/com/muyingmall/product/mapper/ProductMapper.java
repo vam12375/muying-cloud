@@ -19,7 +19,6 @@ public interface ProductMapper extends BaseMapper<Product> {
          * 查询商品列表，并关联查询分类名称和品牌名称
          * 
          * @param page         分页参数
-         * @param queryWrapper 查询条件
          * @return 商品分页列表
          */
         @Select("SELECT p.*, c.name as category_name, b.name as brand_name " +
