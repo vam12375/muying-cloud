@@ -131,4 +131,37 @@ public class ApiResponse<T> extends Result<T> {
         boolean success = result.getCode() != null && result.getCode() == 200;
         return new ApiResponse<>(result.getCode(), result.getMessage(), result.getData(), success);
     }
+
+    /**
+     * 创建未授权响应
+     *
+     * @param message 错误消息
+     * @param <T>     数据类型
+     * @return API响应
+     */
+    public static <T> ApiResponse<T> unauthorized(String message) {
+        return new ApiResponse<>(401, message != null ? message : "未授权访问", null, false);
+    }
+
+    /**
+     * 创建参数验证失败响应
+     *
+     * @param message 错误消息
+     * @param <T>     数据类型
+     * @return API响应
+     */
+    public static <T> ApiResponse<T> validateFailed(String message) {
+        return new ApiResponse<>(400, message != null ? message : "参数验证失败", null, false);
+    }
+
+    /**
+     * 创建失败响应（兼容旧版本）
+     *
+     * @param message 错误消息
+     * @param <T>     数据类型
+     * @return API响应
+     */
+    public static <T> ApiResponse<T> failed(String message) {
+        return error(message);
+    }
 }

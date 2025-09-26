@@ -170,6 +170,35 @@ public class RedisUtils {
     }
 
     /**
+     * 删除缓存（兼容方法）
+     *
+     * @param key 缓存键
+     * @return true表示删除成功，false表示删除失败
+     */
+    public boolean del(String key) {
+        return delete(key);
+    }
+
+    /**
+     * 根据模式删除缓存
+     *
+     * @param pattern 匹配模式，支持通配符*和?
+     * @return 删除的数量
+     */
+    public Long delPattern(String pattern) {
+        try {
+            Set<String> keys = redisTemplate.keys(pattern);
+            if (keys != null && !keys.isEmpty()) {
+                return redisTemplate.delete(keys);
+            }
+            return 0L;
+        } catch (Exception e) {
+            log.error("Redis根据模式删除缓存失败: pattern={}, error={}", pattern, e.getMessage());
+            return 0L;
+        }
+    }
+
+    /**
      * 判断缓存是否存在
      *
      * @param key 缓存键
